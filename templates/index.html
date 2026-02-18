@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;700&display=swap');
+
+        body, html { 
+            margin: 0; padding: 0; background: #000; color: #fff; 
+            font-family: 'Orbitron', sans-serif; height: 100vh; overflow: hidden;
+        }
+
+        /* Full-Screen Background Video */
+        .video-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
+        iframe {
+            width: 100%; height: 100%; border: none;
+            transform: scale(1.4); /* Hides YouTube UI elements */
+            filter: brightness(0.6);
+        }
+
+        /* Premium Glass Sidebar */
+        .sidebar {
+            position: absolute; right: 25px; top: 25px; bottom: 25px;
+            width: 380px; z-index: 10;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 40px;
+            padding: 40px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: -15px 0 50px rgba(0,0,0,0.9);
+        }
+
+        .clock { font-size: 2.8rem; color: #ffd700; text-align: center; font-weight: 900; text-shadow: 0 0 20px #ffd700; }
+        h1 { font-family: 'Cinzel', serif; font-size: 2rem; color: #ffd700; text-align: center; margin: 15px 0; }
+        .dua-box { font-size: 1.25rem; line-height: 1.8; text-align: center; color: #f0f0f0; }
+        .highlight { color: #ffd700; border-bottom: 2px solid #ffd700; padding-bottom: 2px; }
+
+        /* Initial Entry Screen */
+        #splash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        .start-btn {
+            background: none; border: 2px solid #ffd700; color: #ffd700;
+            padding: 20px 60px; font-family: 'Cinzel'; font-size: 1.6rem;
+            cursor: pointer; transition: 0.5s; letter-spacing: 5px; border-radius: 10px;
+        }
+        .start-btn:hover { background: #ffd700; color: #000; box-shadow: 0 0 60px #ffd700; }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div style="font-size: 5rem; margin-bottom: 20px;">🌙</div>
+        <button class="start-btn" onclick="goLive()">ENTER EXPERIENCE ⚡</button>
+    </div>
+
+    <div class="video-bg">
+        <iframe id="makkahStream" 
+                src="https://www.youtube.com/embed/dmBlblTFcKE?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&enablejsapi=1" 
+                allow="autoplay; encrypted-media">
+        </iframe>
+    </div>
+
+    <div class="sidebar">
+        <div>
+            <div class="clock" id="clock">00:00:00</div>
+            <h1>{{ title }}</h1>
+            <div class="dua-box">
+                "{{ message }} <br>
+                <span class="highlight">{{ dua }}</span>"
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid rgba(255,215,0,0.2); padding-top: 25px;">
+            <p style="font-style: italic; font-size: 0.95rem; text-align: center; color: #bbb;">
+                Prayers for Palestine, Kashmir, and the global Ummah.
+            </p>
+            <div style="font-size: 2.5rem; text-align: center; margin-top: 20px;">🌙 🕋 🤲</div>
+        </div>
+    </div>
+
+    <audio id="spiritAudio" loop>
+        <source src="/static/audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function updateClock() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+
+        function goLive() {
+            // Trigger Audio & Video Playback
+            document.getElementById('spiritAudio').play();
+            const iframe = document.getElementById('makkahStream');
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+
+            // Hide Splash Screen
+            const splash = document.getElementById('splash');
+            splash.style.transition = "1.5s";
+            splash.style.opacity = '0';
+            setTimeout(() => { splash.style.display = 'none'; }, 1500);
+        }
+    </script>
+</body>
+</html>
